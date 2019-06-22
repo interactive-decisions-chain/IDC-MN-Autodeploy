@@ -477,7 +477,7 @@ sleep 1
 
 cat > /etc/systemd/system/idchaind.service << EOL
 [Unit]
-Description=Bulwarks's distributed currency daemon
+Description=IDChain's distributed currency daemon
 After=network-online.target
 [Service]
 Type=forking
