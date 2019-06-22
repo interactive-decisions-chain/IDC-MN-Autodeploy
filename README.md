@@ -27,4 +27,43 @@ After waiting 15 confirmations for the collateral transaction to mature, go to t
 
 ##  Installation
 SSH (Putty on Windows, Terminal.app on macOS) to your VPS, login as root (*Please note: It's normal that you don't see your password after typing or pasting it*) and run the following command:
-`https://raw.githubusercontent.com/interactive-decisions-chain/IDC-MN-Autodeploy/master/mn_install.sh`
+
+`bash <( curl https://raw.githubusercontent.com/interactive-decisions-chain/IDC-MN-Autodeploy/master/mn_install.sh )`
+
+When the script asks, confirm your VPS IP Address and paste your masternode key. (You can copy your key and paste into the VPS if connected with Putty by right clicking)
+
+The installer will then present you with a few options.
+**PLEASE NOTE:** Do not choose the advanced installation option unless you have experience with Linux and know what you are doing. Advanced mode will install your masternode under a non-root user called "idchain" instead of root, so you need to know what that means and how to log in as a different user under Linux. If you don't, things will not work as expected and the IDChain team CANNOT help you - you will have to restart the installation.
+
+Follow the instructions the script presents you with.
+
+After the basic installation is done, the wallet will sync. You will see the following message:
+```Your masternode is syncing. Please wait for this process to finish.
+This can take up to a few hours. Do not close this window.
+```
+Continue following the instructions as presented.
+
+Once you see "Masternode setup completed." on screen, you are done.
+
+# Non-interactive installation
+You can use the installer in a non-interactive mode by using command line arguments - for example, if you want to automate the installation. This requires that you download the installer and run it locally. Here are the arguments you can pass to mn_install.sh:
+
+```
+-n --normal               : Run installer in normal mode
+-a --advanced             : Run installer in advanced mode
+-i --externalip <address> : Public IP address of VPS
+--bindip <address>        : Internal bind IP to use
+-k --privatekey <key>     : Private key to use
+-f --fail2ban             : Install Fail2Ban
+--no-fail2ban             : Do nott install Fail2Ban
+-u --ufw                  : Install UFW
+--no-ufw                  : Do not install UFW
+-b --bootstrap            : Sync node using Bootstrap
+--no-bootstrap            : Do not use Bootstrap
+-h --help                 : Display this help text.
+--no-interaction          : Do not wait for wallet activation.
+--tor                     : Install TOR and configure idchaind to use it
+--i2p                     : Install I2P (Requires 2GB of RAM)
+```
+
+If you want to make the installation process fully non-interactive, you need to provide IDChain with arguments for the mode to use, the external IP, private key, and wether to use fail2ban, UFW and the bootstrap, and then also add the `--no-interaction` parameter. Please not that this will not tell you to activate your masternode from your wallet after the node has finished syncing, so it will not run until you do.
