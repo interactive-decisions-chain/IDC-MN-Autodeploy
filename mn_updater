@@ -75,7 +75,7 @@ EOL
 sudo systemctl enable idchaind
 sudo systemctl start idchaind
 
-rm -f /usr/local/bin/mn_upodater
+rm -f /usr/local/bin/mn_updater
 curl -o /usr/local/bin/idchainupdate https://raw.githubusercontent.com/interactive-decisions-chain/IDC-MN-Autodeploy/master/mn_updater
 chmod a+x /usr/local/bin/mn_updater
 

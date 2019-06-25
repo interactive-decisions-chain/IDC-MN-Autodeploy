@@ -14,13 +14,13 @@ To get success do the following:
 * The generated address will now be labelled as MN1 If you want to setup more masternodes just repeat the steps so you end up with several addresses for the total number of nodes you wish to setup. *Example: For 10 nodes you will need 10 addresses, label them all.*
 * Once all addresses are created send 20000 IDC each to them. Ensure that you send exactly 20000 IDC and do it in a single transaction. You can double check where the coins are coming from by checking it via coin control usually, that's not an issue.
 
-As soon as all 20000 transactions are done, we will wait for 15 confirmations. You can check this in your wallet or use the explorer. It should take around 30 minutes if all transaction have 15 confirmations.
+As soon as all 20000 IDC's transactions are done, we will wait for 15 confirmations. You can check this in your wallet or use the explorer. It should take around 30 minutes if all transaction have 15 confirmations.
 
 ## Let's do masternode.conf
 After waiting 15 confirmations for the collateral transaction to mature, go to the `Masternodes` tab in your wallet. There you will see a button on the bottom of the wallet that says "configure", click that button to bring up the masternode.conf configuration menu.
 *Hint: If you have no active Masternodes tab - switch it **ON** in wallet settings and restart wallet - this tab will appear now.*
 * Type in the alias you would like to name your masternode in the `Alias Name` field.
-* Paste your VPS IP address in the `VPS Address` field.
+* Paste your VPS IP address and add port number in the `VPS Address` field. Example: 112.55.69.33:31569
 * Then click on `Autofill Privkey` and `Autofill Outputs` to fill in the Privkey, Output and Output ID.
 * Then click `OK` to automatically enter this information in to your masternode.conf.
 * Please restart your wallet after you have completed these steps to finalize your masternode.conf.
