@@ -75,9 +75,9 @@ EOL
 sudo systemctl enable idchaind
 sudo systemctl start idchaind
 
-rm -f /usr/local/bin/mn_updater
-curl -o /usr/local/bin/idchainupdate https://raw.githubusercontent.com/interactive-decisions-chain/IDC-MN-Autodeploy/master/mn_updater
-chmod a+x /usr/local/bin/mn_updater
+rm -f /usr/local/bin/mnupdater
+curl -o /usr/local/bin/idchainupdate https://raw.githubusercontent.com/interactive-decisions-chain/IDC-MN-Autodeploy/master/mnupdater
+chmod a+x /usr/local/bin/mnupdater
 
 if ! systemctl status idchaind | grep -q "active (running)"; then
   echo "ERROR: Failed to start idchaind. Please contact support."

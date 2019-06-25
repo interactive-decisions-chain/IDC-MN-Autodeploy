@@ -504,24 +504,24 @@ if ! systemctl status idchaind | grep -q "active (running)"; then
   exit
 fi
 echo "Installing IDChain masternode Autoupdater..."
-rm -f /usr/local/bin/mn_updater
-curl -o /usr/local/bin/mn_updater https://raw.githubusercontent.com/interactive-decisions-chain/IDC-MN-Autodeploy/master/mn_updater
-chmod a+x /usr/local/bin/mn_updater
+rm -f /usr/local/bin/mnupdater
+curl -o /usr/local/bin/mnupdater https://raw.githubusercontent.com/interactive-decisions-chain/IDC-MN-Autodeploy/master/mnupdater
+chmod a+x /usr/local/bin/mnupdater
 
-if [ ! -f /etc/systemd/system/mn_updater.service ]; then
-cat > /etc/systemd/system/mn_updater.service << EOL[Unit]
+if [ ! -f /etc/systemd/system/mnupdater.service ]; then
+cat > /etc/systemd/system/mnupdater.service << EOL[Unit]
 Description=IDChain's Masternode Autoupdater
 After=network-online.target
 [Service]
 Type=oneshot
 User=root
 WorkingDirectory=${USERHOME}
-ExecStart=/usr/local/bin/mn_updater
+ExecStart=/usr/local/bin/mnupdater
 EOL
 fi
 
-if [ ! -f /etc/systemd/system/mn_updater.timer ]; then
-cat > /etc/systemd/system/mn_updater.timer << EOL
+if [ ! -f /etc/systemd/system/mnupdater.timer ]; then
+cat > /etc/systemd/system/mnupdater.timer << EOL
 [Unit]
 Description=IDChain's Masternode Autoupdater Timer
 [Timer]
@@ -532,8 +532,8 @@ WantedBy=timers.target
 EOL
 fi
 
-systemctl enable mn_updater.timer
-systemctl start mn_updater.timer
+systemctl enable mnupdater.timer
+systemctl start mnupdater.timer
 
 echo "Waiting for wallet to load..."
 until su -c "idchain-cli getinfo 2>/dev/null | grep -q \"version\"" $USER; do
