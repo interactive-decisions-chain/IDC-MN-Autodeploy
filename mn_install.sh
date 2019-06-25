@@ -509,7 +509,8 @@ curl -o /usr/local/bin/mnupdater https://raw.githubusercontent.com/interactive-d
 chmod a+x /usr/local/bin/mnupdater
 
 if [ ! -f /etc/systemd/system/mnupdater.service ]; then
-cat > /etc/systemd/system/mnupdater.service <<  EOL[Unit]
+cat > /etc/systemd/system/mnupdater.service << EOL
+[Unit]
 Description=IDChain's Masternode Autoupdater
 After=network-online.target
 [Service]
