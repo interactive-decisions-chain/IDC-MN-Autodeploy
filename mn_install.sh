@@ -497,98 +497,101 @@ systemctl enable idchaind
 echo "Starting idchaind, will check status in 60 seconds..."
 systemctl start idchaind
 
-  sleep 60
+sleep 60
 
-  if ! systemctl status idchaind | grep -q "active (running)"; then
-    echo "ERROR: Failed to start idchaind. Please contact support."
-    exit
-  fi
-  echo "Installing IDChain masternode Autoupdater..."
-  rm -f /usr/local/bin/mn_updater
-  curl -o /usr/local/bin/mn_updater https://raw.githubusercontent.com/interactive-decisions-chain/IDC-MN-Autodeploy/master/mn_updater
-  chmod a+x /usr/local/bin/mn_updater
+if ! systemctl status idchaind | grep -q "active (running)"; then
+  echo "ERROR: Failed to start idchaind. Please contact support."
+  exit
+fi
+echo "Installing IDChain masternode Autoupdater..."
+rm -f /usr/local/bin/mn_updater
+curl -o /usr/local/bin/mn_updater https://raw.githubusercontent.com/interactive-decisions-chain/IDC-MN-Autodeploy/master/mn_updater
+chmod a+x /usr/local/bin/mn_updater
 
-  if [ ! -f /etc/systemd/system/mn_updater.service ]; then
-  cat > /etc/systemd/system/mn_updater.service << EOL
-  [Unit]
-  Description=IDChain's Masternode Autoupdater
-  After=network-online.target
-  [Service]
-  Type=oneshot
-  User=root
-  WorkingDirectory=${USERHOME}
-  ExecStart=/usr/local/bin/mn_updater
-  EOL
-  fi
+if [ ! -f /etc/systemd/system/mn_updater.service ]; then
+cat > /etc/systemd/system/mn_updater.service <<
+EOL
+fi
 
-  if [ ! -f /etc/systemd/system/mn_updater.timer ]; then
-  cat > /etc/systemd/system/mn_updater.timer << EOL
-  [Unit]
-  Description=IDChain's Masternode Autoupdater Timer
-  [Timer]
-  OnBootSec=1d
-  OnUnitActiveSec=1d
-  [Install]
-  WantedBy=timers.target
-  EOL
-  fi
+[Unit]
+Description=IDChain's Masternode Autoupdater
+After=network-online.target
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=${USERHOME}
+ExecStart=/usr/local/bin/mn_updater
+EOL
+fi
 
-  systemctl enable mn_updater.timer
-  systemctl start mn_updater.timer
+if [ ! -f /etc/systemd/system/mn_updater.timer ]; then
+cat > /etc/systemd/system/mn_updater.timer << EOL
+[Unit]
+Description=IDChain's Masternode Autoupdater Timer
+[Timer]
+OnBootSec=1d
+OnUnitActiveSec=1d
+[Install]
+WantedBy=timers.target
+EOL
+fi
 
-  echo "Waiting for wallet to load..."
-  until su -c "idchain-cli getinfo 2>/dev/null | grep -q \"version\"" $USER; do
-    sleep 1;
-  done
+systemctl enable mn_updater.timer
+systemctl start mn_updater.timer
 
-  clear
+echo "Waiting for wallet to load..."
+until su -c "idchain-cli getinfo 2>/dev/null | grep -q \"version\"" $USER; do
+  sleep 1;
+done
 
-  echo "Your masternode is syncing. Please wait for this process to finish."
-  echo "This can take up to a few hours. Do not close this window."
-  if [[ ("$TOR" == "y" || "$TOR" == "Y") ]]; then
-    echo "The TOR address of your masternode is: $TORHOSTNAME"
-  fi
+clear
 
-  if [[ ("$I2P" == "y" || "$I2P" == "Y") ]]; then
-    echo "The I2P address of your masternode is: $I2PB32KEY"
-  fi
+echo "Your masternode is syncing. Please wait for this process to finish."
+echo "This can take up to a few hours. Do not close this window."
+if [[ ("$TOR" == "y" || "$TOR" == "Y") ]]; then
+  echo "The TOR address of your masternode is: $TORHOSTNAME"
+fi
 
-  echo ""
+if [[ ("$I2P" == "y" || "$I2P" == "Y") ]]; then
+  echo "The I2P address of your masternode is: $I2PB32KEY"
+fi
 
-  until su -c "idchain-cli mnsync status 2>/dev/null | grep '\"IsBlockchainSynced\": true' > /dev/null" "$USER"; do
-    echo -ne "Current block: $(su -c "idchain-cli getblockcount" "$USER")\\r"
-    sleep 1
-  done
+echo ""
 
-  clear
-
-  cat << EOL
-  Now, you need to start your masternode. If you haven't already, please add this
-  node to your masternode.conf now, restart and unlock your desktop wallet, go to
-  the Masternodes tab, select your new node and click "Start Alias."
-  EOL
-
-
-  if [[ $INTERACTIVE = "y" ]]; then
-    read -rp "Press Enter to continue after you've done that. " -n1 -s
-  fi
-
-  clear
-
+until su -c "idchain-cli mnsync status 2>/dev/null | grep '\"IsBlockchainSynced\": true' > /dev/null" "$USER"; do
+  echo -ne "Current block: $(su -c "idchain-cli getblockcount" "$USER")\\r"
   sleep 1
-  su -c "/usr/local/bin/idchain-cli startmasternode local false" $USER
-  sleep 1
-  clear
-  su -c "/usr/local/bin/idchain-cli masternode status" $USER
-  sleep 5
+done
 
-  echo "" && echo "Masternode setup completed."
-  if [[ ("$TOR" == "y" || "$TOR" == "Y") ]]; then
-    echo "The TOR address of your masternode is: $TORHOSTNAME"
-  fi
+clear
 
-  if [[ ("$I2P" == "y" || "$I2P" == "Y") ]]; then
-    echo "The I2P address of your masternode is: $I2PB32KEY"
-  fi
+cat << EOL
+Now, you need to start your masternode. If you haven't already, please add this
+node to your masternode.conf now, restart and unlock your desktop wallet, go to
+the Masternodes tab, select your new node and click "Start Alias."
+EOL
 
-  echo ""
+
+if [[ $INTERACTIVE = "y" ]]; then
+  read -rp "Press Enter to continue after you've done that. " -n1 -s
+fi
+
+clear
+
+sleep 1
+su -c "/usr/local/bin/idchain-cli startmasternode local false" $USER
+sleep 1
+clear
+su -c "/usr/local/bin/idchain-cli masternode status" $USER
+sleep 5
+
+echo "" && echo "Masternode setup completed."
+if [[ ("$TOR" == "y" || "$TOR" == "Y") ]]; then
+  echo "The TOR address of your masternode is: $TORHOSTNAME"
+fi
+
+if [[ ("$I2P" == "y" || "$I2P" == "Y") ]]; then
+  echo "The I2P address of your masternode is: $I2PB32KEY"
+fi
+
+echo ""
